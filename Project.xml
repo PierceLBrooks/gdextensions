@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildster directory="build" distribution="../Distribution">
+  <project directory="../Project">
+    <dependencies>
+      <dependency>
+        <label>godot</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/godotengine/godot.git</url>
+          <git_repo>
+            <branch>master</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <shells>
+            <shell>
+              <work><origin></origin></work>
+              <commands>
+                <command>
+                  <if_exists>
+                    <exists>
+                      <switch id="BUILDSTER_OS">
+                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.exe</case>
+                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.app</case>
+                        <default><quit></quit></default>
+                      </switch>
+                    </exists>
+                    echo "Hello, world!"
+                    <else>
+                      <python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower>
+                    </else>
+                  </if_exists>
+                </command>
+              </commands>
+            </shell>
+            <shell>
+              <work><origin></origin>/bin</work>
+              <commands>
+                <command>
+                  <copy>
+                    <from>
+                      <switch id="BUILDSTER_OS">
+                        <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.exe</case>
+                        <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64</case>
+                        <case check="Darwin">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.app</case>
+                        <default><quit></quit></default>
+                      </switch>
+                    </from>
+                    <to><install></install></to>
+                  </copy>
+                </command>
+              </commands>
+            </shell>
+            <shell>
+              <work><install></install></work>
+              <commands>
+                <command>godot --dump-extension-api</command>
+                <command>
+                  <copy>
+                    <from><install></install>/extension_api.json</from>
+                    <to><data id="BUILDSTER_WD"></data></to>
+                  </copy>
+                </command>
+              </commands>
+            </shell>
+          </shells>
+        </build>
+        <exports></exports>
+        <imports></imports>
+      </dependency>
+      <dependency>
+        <label>godot-cpp</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>https://github.com/godotengine/godot-cpp.git</url>
+          <git_repo>
+            <branch>master</branch>
+            <credentials>
+              <username>username</username>
+              <password>password</password>
+            </credentials>
+          </git_repo>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <cmake>
+            <switch id="BUILDSTER_OS">
+              <case check="Windows"><generator architecture="x64">Visual Studio 17 2022</generator></case>
+              <case check="Linux"><generator>Unix Makefiles</generator></case>
+              <case check="Darwin"><generator>Xcode</generator></case>
+              <default><quit></quit></default>
+            </switch>
+            <source>..</source>
+          </cmake>
+        </build>
+        <exports>
+          <export type="libraries">
+            <key></key>
+            <value></value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+    </dependencies>
+    <targets>
+      <target type="library" linkage="shared">
+        <label>gdexample</label>
+        <switch id="BUILDSTER_OS">
+          <case check="Windows"><generator architecture="x64">Visual Studio 17 2022</generator></case>
+          <case check="Linux"><generator>Unix Makefiles</generator></case>
+          <case check="Darwin"><generator>Xcode</generator></case>
+          <default><quit></quit></default>
+        </switch>
+        <definitions></definitions>
+        <links>
+          <link>godot-cpp*</link>
+        </links>
+        <imports>
+          <import>godot-cpp</import>
+        </imports>
+      </target>
+    </targets>
+  </project>
+</buildster>

@@ -1,0 +1,2 @@
+invokescons>=1.4
+buildster>=1.0
