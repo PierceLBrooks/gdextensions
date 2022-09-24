@@ -27,11 +27,16 @@
                       <switch id="BUILDSTER_OS">
                         <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
                         <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
-                        <case check="Darwin"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.app</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.macos.tools.x86_64</case>
                         <default><quit></quit></default>
                       </switch>
                     </exists>
-                    <else><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower></else>
+                    <else>
+                      <switch id="BUILDSTER_OS">
+                        <case check="Darwin"><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=macos</case>
+                        <default><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
+                      </switch>
+                    </else>
                   </if_exists>
                 </command>
               </commands>
@@ -48,7 +53,7 @@
                           <switch id="BUILDSTER_OS">
                             <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
                             <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
-                            <case check="Darwin">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.app</case>
+                            <case check="Darwin">godot.macos.tools.x86_64</case>
                             <default><quit></quit></default>
                           </switch>
                         </from>
@@ -66,7 +71,12 @@
                 <command>
                   <if_exists>
                     <exists><data id="BUILDSTER_WD"></data>/extension_api.json</exists>
-                    <else>godot --dump-extension-api</else>
+                    <else>
+                      <switch id="BUILDSTER_OS">
+                        <case check="Windows">godot --dump-extension-api</case>
+                        <default>./godot* --dump-extension-api</default>
+                      </switch>
+                    </else>
                   </if_exists>
                 </command>
                 <command>
@@ -113,9 +123,9 @@
                 <commands>
                   <command>
                     <copy>
-                      <from>godot-cpp*</from>
+                      <from>*godot-cpp*</from>
                       <to><install></install></to>
-                      <rename>godot-cpp</rename>
+                      <rename>libgodot-cpp</rename>
                     </copy>
                   </command>
                 </commands>
