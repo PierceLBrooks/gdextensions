@@ -99,6 +99,10 @@
             <key>GODOT_CUSTOM_API_FILE</key>
             <value><data id="BUILDSTER_WD"></data>/extension_api.json</value>
           </export>
+          <export type="libraries">
+            <key>GODOT_ENGINE_PATH</key>
+            <value><install></install></value>
+          </export>
         </exports>
         <imports></imports>
       </dependency>
@@ -132,7 +136,9 @@
               </shell>
             </shells>
           </post>
-          <arguments></arguments>
+          <arguments>
+            <argument>-DCMAKE_OSX_ARCHITECTURE="x86_64"</argument>
+          </arguments>
           <cmake>
             <switch id="BUILDSTER_OS">
               <case check="Windows"><generator architecture="x64">Visual Studio 17 2022</generator></case>
@@ -181,11 +187,14 @@
             <value>1</value>
           </definition>-->
         </definitions>
-        <arguments></arguments>
+        <arguments>
+          <argument>-DCMAKE_OSX_ARCHITECTURE="x86_64"</argument>
+        </arguments>
         <links>
-          <link>godot-cpp*</link>
+          <link>*godot-cpp*</link>
         </links>
         <imports>
+          <import>godot</import>
           <import>godot-cpp</import>
         </imports>
       </target>
