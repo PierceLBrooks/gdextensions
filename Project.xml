@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<buildster directory="build" distribution="../Distribution">
+<buildster directory="build" distribution="../Distribution" cpp="20">
   <project directory="../Project">
     <dependencies>
       <dependency>
@@ -25,16 +25,13 @@
                   <if_exists>
                     <exists>
                       <switch id="BUILDSTER_OS">
-                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.exe</case>
-                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64</case>
-                        <case check="Darwin"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.app</case>
+                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
+                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.app</case>
                         <default><quit></quit></default>
                       </switch>
                     </exists>
-                    echo "Hello, world!"
-                    <else>
-                      <python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower>
-                    </else>
+                    <else><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower></else>
                   </if_exists>
                 </command>
               </commands>
@@ -43,44 +40,65 @@
               <work><origin></origin>/bin</work>
               <commands>
                 <command>
-                  <copy>
-                    <from>
-                      <switch id="BUILDSTER_OS">
-                        <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.exe</case>
-                        <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64</case>
-                        <case check="Darwin">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.64.app</case>
-                        <default><quit></quit></default>
-                      </switch>
-                    </from>
-                    <to><install></install></to>
-                  </copy>
+                  <if_exists>
+                    <exists><install></install>/godot*</exists>
+                    <else>
+                      <copy>
+                        <from>
+                          <switch id="BUILDSTER_OS">
+                            <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
+                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
+                            <case check="Darwin">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.app</case>
+                            <default><quit></quit></default>
+                          </switch>
+                        </from>
+                        <to><install></install></to>
+                        <rename>godot</rename>
+                      </copy>
+                    </else>
+                  </if_exists>
                 </command>
               </commands>
             </shell>
             <shell>
               <work><install></install></work>
               <commands>
-                <command>godot --dump-extension-api</command>
                 <command>
-                  <copy>
-                    <from><install></install>/extension_api.json</from>
-                    <to><data id="BUILDSTER_WD"></data></to>
-                  </copy>
+                  <if_exists>
+                    <exists><data id="BUILDSTER_WD"></data>/extension_api.json</exists>
+                    <else>godot --dump-extension-api</else>
+                  </if_exists>
+                </command>
+                <command>
+                  <if_exists>
+                    <exists><data id="BUILDSTER_WD"></data>/extension_api.json</exists>
+                    <else>
+                      <copy>
+                        <from><install></install>/extension_api.json</from>
+                        <to><data id="BUILDSTER_WD"></data></to>
+                      </copy>
+                    </else>
+                  </if_exists>
                 </command>
               </commands>
             </shell>
           </shells>
         </build>
-        <exports></exports>
+        <exports>
+          <export type="other">
+            <key>GODOT_CUSTOM_API_FILE</key>
+            <value><data id="BUILDSTER_WD"></data>/extension_api.json</value>
+          </export>
+        </exports>
         <imports></imports>
       </dependency>
       <dependency>
         <label>godot-cpp</label>
         <subpath>build</subpath>
         <remote>
-          <url>https://github.com/godotengine/godot-cpp.git</url>
+          <url>https://github.com/PierceLBrooks/godot-cpp.git</url>
           <git_repo>
-            <branch>master</branch>
+            <branch>plb/fix-cmake-custom_godot_api_file-string-escape</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
@@ -88,6 +106,22 @@
           </git_repo>
         </remote>
         <build>
+          <post>
+            <shells>
+              <shell>
+                <work><origin></origin>/build/debug/bin</work>
+                <commands>
+                  <command>
+                    <copy>
+                      <from>godot-cpp*</from>
+                      <to><install></install></to>
+                      <rename>godot-cpp</rename>
+                    </copy>
+                  </command>
+                </commands>
+              </shell>
+            </shells>
+          </post>
           <arguments></arguments>
           <cmake>
             <switch id="BUILDSTER_OS">
@@ -101,11 +135,25 @@
         </build>
         <exports>
           <export type="libraries">
-            <key></key>
-            <value></value>
+            <key>GODOT_CPP_LIBRARY_PATH</key>
+            <value><install></install></value>
+          </export>
+          <export type="headers">
+            <key>GODOT_CPP_INCLUDE_PATH</key>
+            <value><origin></origin>/include</value>
+          </export>
+          <export type="headers">
+            <key>GODOT_INCLUDE_PATH</key>
+            <value><origin></origin>/godot-headers</value>
+          </export>
+          <export type="headers">
+            <key>GODOT_BINDING_INCLUDE_PATH</key>
+            <value><origin></origin>/build/<lower><data id="BUILDSTER_VARIANT"></data></lower>/gen/include</value>
           </export>
         </exports>
-        <imports></imports>
+        <imports>
+          <import>godot</import>
+        </imports>
       </dependency>
     </dependencies>
     <targets>
@@ -117,7 +165,13 @@
           <case check="Darwin"><generator>Xcode</generator></case>
           <default><quit></quit></default>
         </switch>
-        <definitions></definitions>
+        <definitions>
+          <!--<definition>
+            <key>TYPED_METHOD_BIND</key>
+            <value>1</value>
+          </definition>-->
+        </definitions>
+        <arguments></arguments>
         <links>
           <link>godot-cpp*</link>
         </links>
