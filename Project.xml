@@ -228,5 +228,20 @@
         </imports>
       </target>
     </targets>
+    <post>
+      <shells>
+        <shell>
+          <work><origin></origin></work>
+          <commands>
+            <command>
+              <write>
+                <destination><distribution></distribution>/buildster.log</destination>
+                <content><log></log></content>
+              </write>
+            </command>
+          </commands>
+        </shell>
+      </shells>
+    </post>
   </project>
 </buildster>
