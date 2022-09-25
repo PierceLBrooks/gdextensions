@@ -3,7 +3,7 @@
   <project directory="../Project">
     <dependencies>
       <dependency>
-        <label>godot</label>
+        <label>godot-<lower><data id="BUILDSTER_VARIANT"></data></lower></label>
         <subpath>build</subpath>
         <remote>
           <url>https://github.com/godotengine/godot.git</url>
@@ -24,17 +24,47 @@
                 <command>
                   <if_exists>
                     <exists>
+                      <switch id="BUILDSTER_VARIANT">
+                        <case check="Debug"><origin></origin>/../godot-release</case>
+                        <case check="Release"><origin></origin>/../godot-debug</case>
+                        <default><quit></quit></default>
+                      </switch>
+                    </exists>
+                    <else>
+                      <switch id="BUILDSTER_VARIANT">
+                        <case check="Debug">
+                          <copy>
+                            <from><origin></origin></from>
+                            <to><origin></origin>/../godot-release</to>
+                            <!--<rename>godot-release</rename>-->
+                          </copy>
+                        </case>
+                        <case check="Release">
+                          <copy>
+                            <from><origin></origin></from>
+                            <to><origin></origin>/../godot-debug</to>
+                            <!--<rename>godot-debug</rename>-->
+                          </copy>
+                        </case>
+                        <default><quit></quit></default>
+                      </switch>
+                    </else>
+                  </if_exists>
+                </command>
+                <command>
+                  <if_exists>
+                    <exists>
                       <switch id="BUILDSTER_OS">
-                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
-                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
-                        <case check="Darwin"><origin></origin>/bin/godot.macos.tools.x86_64</case>
+                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
+                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
                         <default><quit></quit></default>
                       </switch>
                     </exists>
                     <else>
                       <switch id="BUILDSTER_OS">
-                        <case check="Darwin"><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=macos</case>
-                        <default><python></python> -m invokescons target=<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
+                        <case check="Darwin"><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=macos</case>
+                        <default><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
                       </switch>
                     </else>
                   </if_exists>
@@ -46,18 +76,18 @@
               <commands>
                 <command>
                   <if_exists>
-                    <exists><install></install>/godot*</exists>
+                    <exists><install></install>/godot/godot*</exists>
                     <else>
                       <copy>
                         <from>
                           <switch id="BUILDSTER_OS">
-                            <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64.exe</case>
-                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>.tools.x86_64</case>
-                            <case check="Darwin">godot.macos.tools.x86_64</case>
+                            <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
+                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
+                            <case check="Darwin">godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
                             <default><quit></quit></default>
                           </switch>
                         </from>
-                        <to><install></install></to>
+                        <to><install></install>/godot</to>
                         <rename>godot</rename>
                       </copy>
                     </else>
@@ -66,27 +96,16 @@
               </commands>
             </shell>
             <shell>
-              <work><install></install></work>
+              <work><install></install>/godot</work>
               <commands>
                 <command>
                   <if_exists>
-                    <exists><data id="BUILDSTER_WD"></data>/extension_api.json</exists>
+                    <exists><install></install>/godot/extension_api.json</exists>
                     <else>
                       <switch id="BUILDSTER_OS">
                         <case check="Windows">godot --dump-extension-api</case>
                         <default>./godot* --dump-extension-api</default>
                       </switch>
-                    </else>
-                  </if_exists>
-                </command>
-                <command>
-                  <if_exists>
-                    <exists><data id="BUILDSTER_WD"></data>/extension_api.json</exists>
-                    <else>
-                      <copy>
-                        <from><install></install>/extension_api.json</from>
-                        <to><data id="BUILDSTER_WD"></data></to>
-                      </copy>
                     </else>
                   </if_exists>
                 </command>
@@ -97,11 +116,11 @@
         <exports>
           <export type="other">
             <key>GODOT_CUSTOM_API_FILE</key>
-            <value><data id="BUILDSTER_WD"></data>/extension_api.json</value>
+            <value><install></install>/godot/extension_api.json</value>
           </export>
           <export type="libraries">
             <key>GODOT_ENGINE_PATH</key>
-            <value><install></install></value>
+            <value><install></install>/godot</value>
           </export>
         </exports>
         <imports></imports>
@@ -123,12 +142,12 @@
           <post>
             <shells>
               <shell>
-                <work><origin></origin>/build/debug/bin</work>
+                <work><origin></origin>/build/<lower><data id="BUILDSTER_VARIANT"></data></lower>/bin</work>
                 <commands>
                   <command>
                     <copy>
                       <from>*godot-cpp*</from>
-                      <to><install></install></to>
+                      <to><install></install>/godot</to>
                       <rename>libgodot-cpp</rename>
                     </copy>
                   </command>
@@ -137,7 +156,9 @@
             </shells>
           </post>
           <arguments>
-            <argument>-DCMAKE_OSX_ARCHITECTURE="x86_64"</argument>
+            <if_check id="BUILDSTER_OS" check="Darwin">
+              <argument>-DCMAKE_OSX_ARCHITECTURES="x86_64"</argument>
+            </if_check>
           </arguments>
           <cmake>
             <switch id="BUILDSTER_OS">
@@ -152,7 +173,7 @@
         <exports>
           <export type="libraries">
             <key>GODOT_CPP_LIBRARY_PATH</key>
-            <value><install></install></value>
+            <value><install></install>/godot</value>
           </export>
           <export type="headers">
             <key>GODOT_CPP_INCLUDE_PATH</key>
@@ -168,7 +189,7 @@
           </export>
         </exports>
         <imports>
-          <import>godot</import>
+          <import>godot-<lower><data id="BUILDSTER_VARIANT"></data></lower></import>
         </imports>
       </dependency>
     </dependencies>
@@ -182,19 +203,27 @@
           <default><quit></quit></default>
         </switch>
         <definitions>
-          <!--<definition>
-            <key>TYPED_METHOD_BIND</key>
-            <value>1</value>
-          </definition>-->
+          <if_check id="BUILDSTER_OS" check="Windows">
+            <definition>
+              <key>TYPED_METHOD_BIND</key>
+              <value>1</value>
+            </definition>
+            <definition>
+              <key>NOMINMAX</key>
+              <value>1</value>
+            </definition>
+          </if_check>
         </definitions>
         <arguments>
-          <argument>-DCMAKE_OSX_ARCHITECTURE="x86_64"</argument>
+          <if_check id="BUILDSTER_OS" check="Darwin">
+            <argument>-DCMAKE_OSX_ARCHITECTURES="x86_64"</argument>
+          </if_check>
         </arguments>
         <links>
           <link>*godot-cpp*</link>
         </links>
         <imports>
-          <import>godot</import>
+          <import>godot-<lower><data id="BUILDSTER_VARIANT"></data></lower></import>
           <import>godot-cpp</import>
         </imports>
       </target>
