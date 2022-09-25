@@ -228,7 +228,7 @@
         </imports>
       </target>
     </targets>
-    <post>
+    <!--<post>
       <shells>
         <shell>
           <work><origin></origin></work>
@@ -242,6 +242,6 @@
           </commands>
         </shell>
       </shells>
-    </post>
+    </post>-->
   </project>
 </buildster>
