@@ -56,8 +56,8 @@
                     <exists>
                       <switch id="BUILDSTER_OS">
                         <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
-                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
-                        <case check="Darwin"><origin></origin>/bin/godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
+                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
                         <default><quit></quit></default>
                       </switch>
                     </exists>
@@ -82,8 +82,8 @@
                         <from>
                           <switch id="BUILDSTER_OS">
                             <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
-                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
-                            <case check="Darwin">godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64</case>
+                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
+                            <case check="Darwin">godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
                             <default><quit></quit></default>
                           </switch>
                         </from>
