@@ -157,7 +157,7 @@
           </post>
           <arguments>
             <if_check id="BUILDSTER_OS" check="Darwin">
-              <argument>-DCMAKE_OSX_ARCHITECTURES="x86_64"</argument>
+              <argument>-DCMAKE_OSX_ARCHITECTURES="<data id="BUILDSTER_UNAME"></data>"</argument>
             </if_check>
           </arguments>
           <cmake>
@@ -216,7 +216,7 @@
         </definitions>
         <arguments>
           <if_check id="BUILDSTER_OS" check="Darwin">
-            <argument>-DCMAKE_OSX_ARCHITECTURES="x86_64"</argument>
+            <argument>-DCMAKE_OSX_ARCHITECTURES="<data id="BUILDSTER_UNAME"></data>"</argument>
           </if_check>
         </arguments>
         <links>
