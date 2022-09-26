@@ -104,7 +104,7 @@
                     <else>
                       <switch id="BUILDSTER_OS">
                         <case check="Windows">godot --dump-extension-api</case>
-                        <default>./godot* --dump-extension-api</default>
+                        <default>./godot.<data id="BUILDSTER_ARCH"></data> --dump-extension-api</default>
                       </switch>
                     </else>
                   </if_exists>
