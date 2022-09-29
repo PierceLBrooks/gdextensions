@@ -1,3 +1,6 @@
 [submodule "Buildster"]
 	path = Buildster
 	url = https://github.com/PierceLBrooks/Buildster.git
+[submodule "Project/oublietteer"]
+	path = Project/oublietteer
+	url = https://github.com/PierceLBrooks/Oublietteer.git

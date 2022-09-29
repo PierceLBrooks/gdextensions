@@ -194,6 +194,24 @@
       </dependency>
     </dependencies>
     <targets>
+      <target type="library" linkage="static">
+        <label>oublietteer</label>
+        <subpath>Trunk</subpath>
+        <switch id="BUILDSTER_OS">
+          <case check="Windows"><generator architecture="x64">Visual Studio 17 2022</generator></case>
+          <case check="Linux"><generator>Unix Makefiles</generator></case>
+          <case check="Darwin"><generator>Xcode</generator></case>
+          <default><quit></quit></default>
+        </switch>
+        <definitions></definitions>
+        <arguments>
+          <if_check id="BUILDSTER_OS" check="Darwin">
+            <argument>-DCMAKE_OSX_ARCHITECTURES="<data id="BUILDSTER_ARCH"></data>"</argument>
+          </if_check>
+        </arguments>
+        <links></links>
+        <imports></imports>
+      </target>
       <target type="library" linkage="shared">
         <label>gdexample</label>
         <switch id="BUILDSTER_OS">
@@ -221,10 +239,12 @@
         </arguments>
         <links>
           <link>*godot-cpp*</link>
+          <link>*oublietteer*</link>
         </links>
         <imports>
           <import>godot-<lower><data id="BUILDSTER_VARIANT"></data></lower></import>
           <import>godot-cpp</import>
+          <import>oublietteer</import>
         </imports>
       </target>
     </targets>
