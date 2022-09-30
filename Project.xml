@@ -197,6 +197,9 @@
       <target type="library" linkage="static">
         <label>oublietteer</label>
         <subpath>Trunk</subpath>
+        <exceptions>
+          <exception><origin></origin>/Trunk/src/oublietteer/example/main.cpp</exception>
+        </exceptions>
         <switch id="BUILDSTER_OS">
           <case check="Windows"><generator architecture="x64">Visual Studio 17 2022</generator></case>
           <case check="Linux"><generator>Unix Makefiles</generator></case>
