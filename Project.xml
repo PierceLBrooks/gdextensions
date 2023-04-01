@@ -8,7 +8,7 @@
         <remote>
           <url>https://github.com/godotengine/godot.git</url>
           <git_repo>
-            <branch>master</branch>
+            <branch>4.0.1-stable</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
@@ -55,16 +55,16 @@
                   <if_exists>
                     <exists>
                       <switch id="BUILDSTER_OS">
-                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
-                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>bds<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
-                        <case check="Darwin"><origin></origin>/bin/godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
+                        <case check="Windows"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>.editor.x86_64.exe</case>
+                        <case check="Linux"><origin></origin>/bin/godot.<lower><data id="BUILDSTER_OS"></data></lower>bds.editor.*</case>
+                        <case check="Darwin"><origin></origin>/bin/godot.macos.editor.*</case>
                         <default><quit></quit></default>
                       </switch>
                     </exists>
                     <else>
                       <switch id="BUILDSTER_OS">
-                        <case check="Darwin"><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=macos</case>
-                        <default><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
+                        <case check="Darwin"><python></python> -m invokescons <if_check id="BUILDSTER_VARIANT" check="Release">production=yes<else>dev_build=yes</else></if_check> target=editor platform=macos</case>
+                        <default><python></python> -m invokescons <if_check id="BUILDSTER_VARIANT" check="Release">production=yes<else>dev_build=yes</else></if_check> target=editor platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
                       </switch>
                     </else>
                   </if_exists>
@@ -81,9 +81,9 @@
                       <copy>
                         <from>
                           <switch id="BUILDSTER_OS">
-                            <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower><if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.x86_64.exe</case>
-                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>bds<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
-                            <case check="Darwin">godot.macos<if_check id="BUILDSTER_VARIANT" check="Release">.opt</if_check>.tools.*</case>
+                            <case check="Windows">godot.<lower><data id="BUILDSTER_OS"></data></lower>.editor.x86_64.exe</case>
+                            <case check="Linux">godot.<lower><data id="BUILDSTER_OS"></data></lower>bds.editor.*</case>
+                            <case check="Darwin">godot.macos.editor.*</case>
                             <default><quit></quit></default>
                           </switch>
                         </from>
@@ -114,7 +114,7 @@
           </shells>
         </build>
         <exports>
-          <export type="other">
+          <export type="all">
             <key>GODOT_CUSTOM_API_FILE</key>
             <value><install></install>/godot/extension_api.json</value>
           </export>
@@ -129,9 +129,9 @@
         <label>godot-cpp</label>
         <subpath>build</subpath>
         <remote>
-          <url>https://github.com/PierceLBrooks/godot-cpp.git</url>
+          <url>https://github.com/godotengine/godot-cpp.git</url>
           <git_repo>
-            <branch>plb/fix-cmake-custom_godot_api_file-string-escape</branch>
+            <branch>godot-4.0.1-stable</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
@@ -142,7 +142,7 @@
           <post>
             <shells>
               <shell>
-                <work><origin></origin>/build/<lower><data id="BUILDSTER_VARIANT"></data></lower>/bin</work>
+                <work><origin></origin>/build/<lower><data id="BUILDSTER_VARIANT"></data></lower>/bin/<if_check id="BUILDSTER_OS" check="Windows"><data id="BUILDSTER_VARIANT"></data></if_check></work>
                 <commands>
                   <command>
                     <copy>
@@ -178,6 +178,10 @@
           <export type="headers">
             <key>GODOT_CPP_INCLUDE_PATH</key>
             <value><origin></origin>/include</value>
+          </export>
+          <export type="headers">
+            <key>GODOT_EXTENSION_INCLUDE_PATH</key>
+            <value><origin></origin>/gdextension</value>
           </export>
           <export type="headers">
             <key>GODOT_INCLUDE_PATH</key>
