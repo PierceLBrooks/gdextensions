@@ -8,7 +8,7 @@
         <remote>
           <url>https://github.com/godotengine/godot.git</url>
           <git_repo>
-            <branch>master</branch>
+            <branch>4.0.1-stable</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
@@ -114,7 +114,7 @@
           </shells>
         </build>
         <exports>
-          <export type="other">
+          <export type="all">
             <key>GODOT_CUSTOM_API_FILE</key>
             <value><install></install>/godot/extension_api.json</value>
           </export>
@@ -131,7 +131,7 @@
         <remote>
           <url>https://github.com/PierceLBrooks/godot-cpp.git</url>
           <git_repo>
-            <branch>plb/fix-cmake-custom_godot_api_file-string-escape</branch>
+            <branch>godot-4.0.1-stable</branch>
             <credentials>
               <username>username</username>
               <password>password</password>
