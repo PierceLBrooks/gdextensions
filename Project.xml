@@ -63,8 +63,8 @@
                     </exists>
                     <else>
                       <switch id="BUILDSTER_OS">
-                        <case check="Darwin"><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=macos</case>
-                        <default><python></python> -m invokescons target=<if_check id="BUILDSTER_VARIANT" check="Release">release_</if_check>debug platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
+                        <case check="Darwin"><python></python> -m invokescons target=template_<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=macos</case>
+                        <default><python></python> -m invokescons target=template_<lower><data id="BUILDSTER_VARIANT"></data></lower> platform=<lower><data id="BUILDSTER_OS"></data></lower></default>
                       </switch>
                     </else>
                   </if_exists>
